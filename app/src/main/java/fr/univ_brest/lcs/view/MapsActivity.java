@@ -14,6 +14,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -78,24 +79,7 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
         myMap = googleMap;
         myGoogleApiClient.connect();
 
-        // Add a marker in Sydney and UBO
-        LatLng sydney = new LatLng(-34, 151);
-        LatLng ubo = new LatLng(48.4, -4.45);
 
-        myMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        myMap.addMarker(new MarkerOptions().position(ubo).title("Marker in UBO"));
-
-        //Find user's location
-        Marker myCurrLocation;
-        LatLng me = new LatLng(myLatitude, myLongitude);
-        MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(me);
-        markerOptions.title("Current Position");
-        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
-        myCurrLocation = myMap.addMarker(markerOptions);
-
-        //and move the camera
-        myMap.moveCamera(CameraUpdateFactory.newLatLng(me));
     }
 
     //Requested by ConnectionCallbacks
@@ -117,6 +101,21 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
             myLatitude = myLastLocation.getLatitude();
             myLongitude = myLastLocation.getLongitude();
         }
+
+        // Add a marker in Sydney and UBO
+        LatLng sydney = new LatLng(-34, 151);
+        LatLng ubo = new LatLng(48.39, -4.47);
+
+        myMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+        myMap.addMarker(new MarkerOptions().position(ubo).title("Marker in UBO"));
+
+        //Find user's location
+        LatLng me = new LatLng(myLatitude, myLongitude);
+
+        //and move the camera
+        myMap.setMyLocationEnabled(true);
+        myMap.moveCamera(CameraUpdateFactory.newLatLng(me));
+        myMap.moveCamera(CameraUpdateFactory.zoomTo(14f));
     }
 
     public void onConnectionFailed(ConnectionResult result) {
