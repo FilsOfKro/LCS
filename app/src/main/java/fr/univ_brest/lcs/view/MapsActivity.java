@@ -3,6 +3,7 @@ package fr.univ_brest.lcs.view;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
@@ -13,10 +14,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -55,7 +53,7 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
                     .addConnectionCallbacks(this)
                     .addOnConnectionFailedListener(new GoogleApiClient.OnConnectionFailedListener() {
                         @Override
-                        public void onConnectionFailed(ConnectionResult connectionResult) {
+                        public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
                             Log.e(TAG, "Connection failed");
                         }
                     })
@@ -118,11 +116,13 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
         myMap.moveCamera(CameraUpdateFactory.zoomTo(14f));
     }
 
-    public void onConnectionFailed(ConnectionResult result) {
-        // Refer to the javadoc for ConnectionResult to see what error codes might be returned in
-        // onConnectionFailed.
-        Log.i(TAG, "Connection failed: ConnectionResult.getErrorCode() = " + result.getErrorCode());
-    }
+// --Commented out by Inspection START (21/12/2016 15:28):
+//    public void onConnectionFailed(ConnectionResult result) {
+//        // Refer to the javadoc for ConnectionResult to see what error codes might be returned in
+//        // onConnectionFailed.
+//        Log.i(TAG, "Connection failed: ConnectionResult.getErrorCode() = " + result.getErrorCode());
+//    }
+// --Commented out by Inspection STOP (21/12/2016 15:28)
 
     @Override
     public void onConnectionSuspended(int i) {
