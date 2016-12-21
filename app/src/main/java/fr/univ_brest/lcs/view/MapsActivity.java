@@ -103,6 +103,6 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
         // The connection to Google Play services was lost for some reason. We call connect() to
         // attempt to re-establish the connection.
         Log.i(TAG, "Connection suspended");
-        mGoogleApiClient.connect();
+        myGoogleApiClient.connect();
     }
 }
