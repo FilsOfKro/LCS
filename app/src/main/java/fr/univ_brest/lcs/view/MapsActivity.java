@@ -1,9 +1,10 @@
 package fr.univ_brest.lcs.view;
 
-import android.location.Criteria;
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationManager;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
@@ -14,6 +15,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -22,11 +24,20 @@ import fr.univ_brest.lcs.R;
 
 import android.util.Log;
 
+/**
+ * MapsActivity displays a map with user's position and the nearby cameras.
+ *
+ * We first execute, we get
+ * onCreate,    we get a GoogleApiClient
+ * onMapReady,  initialize vars, connect to API, launches onConnected
+ * onConnected, get location
+ */
 public class MapsActivity extends FragmentActivity implements GoogleApiClient.ConnectionCallbacks, OnMapReadyCallback {
-
-    private GoogleMap mMap;
+    private static final String TAG = MapsActivity.class.getName(); //For logging purposes
+    private GoogleMap myMap;
     private GoogleApiClient myGoogleApiClient;
-    private String myLongitude;
+    private Double myLongitude;
+    private Double myLatitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +52,12 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
         if (myGoogleApiClient == null) {
             myGoogleApiClient = new GoogleApiClient.Builder(this)
                     .addConnectionCallbacks(this)
-                    .addOnConnectionFailedListener(this)
+                    .addOnConnectionFailedListener(new GoogleApiClient.OnConnectionFailedListener() {
+                        @Override
+                        public void onConnectionFailed(ConnectionResult connectionResult) {
+                            Log.e(TAG, "Connection failed");
+                        }
+                    })
                     .addApi(LocationServices.API)
                     .build();
         }
@@ -59,43 +75,54 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
+        myMap = googleMap;
         myGoogleApiClient.connect();
 
         // Add a marker in Sydney and UBO
         LatLng sydney = new LatLng(-34, 151);
-        LatLng ubo = new LatLng(48.5,-4.5);
+        LatLng ubo = new LatLng(48.4, -4.45);
 
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.addMarker(new MarkerOptions().position(ubo).title("Marker in UBO"));
+        myMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+        myMap.addMarker(new MarkerOptions().position(ubo).title("Marker in UBO"));
 
         //Find user's location
-        Location myLastLocation = LocationServices.FusedLocationApi.getLastLocation(myGoogleApiClient);
-        LatLng me = new LatLng(myLastLocation.getLatitude(), myLastLocation.getLongitude());
+        Marker myCurrLocation;
+        LatLng me = new LatLng(myLatitude, myLongitude);
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(me);
         markerOptions.title("Current Position");
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
-        mCurrLocation = mGoogleMap.addMarker(markerOptions);
+        myCurrLocation = myMap.addMarker(markerOptions);
 
         //and move the camera
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(me));
+        myMap.moveCamera(CameraUpdateFactory.newLatLng(me));
     }
 
     //Requested by ConnectionCallbacks
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        //Permission check required bymyLastLocation
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        Location myLastLocation = LocationServices.FusedLocationApi.getLastLocation(myGoogleApiClient);
+        if(myLastLocation != null){
+            myLatitude = myLastLocation.getLatitude();
+            myLongitude = myLastLocation.getLongitude();
+        }
+    }
+
     public void onConnectionFailed(ConnectionResult result) {
         // Refer to the javadoc for ConnectionResult to see what error codes might be returned in
         // onConnectionFailed.
         Log.i(TAG, "Connection failed: ConnectionResult.getErrorCode() = " + result.getErrorCode());
-    }
-
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        myLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        if(myLastLocation != null){
-            myLatitude.setText(String.valueOf(myLastLocation.getLatitude()));
-            myLongitude.setText(String.valueOf(myLastLocation.getLongitude()));
-        }
     }
 
     @Override
