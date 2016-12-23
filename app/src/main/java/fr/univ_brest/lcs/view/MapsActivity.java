@@ -15,9 +15,12 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.common.api.GoogleApiClient;
+
+import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 
 import fr.univ_brest.lcs.R;
 
@@ -75,9 +78,16 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
     @Override
     public void onMapReady(GoogleMap googleMap) {
         myMap = googleMap;
+        myMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener()
+        {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+
+                Log.d("", marker.getTitle());
+            }
+        });
+
         myGoogleApiClient.connect();
-
-
     }
 
     //Requested by ConnectionCallbacks
@@ -131,4 +141,5 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
         Log.i(TAG, "Connection suspended");
         myGoogleApiClient.connect();
     }
+
 }
