@@ -112,7 +112,7 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
 
         // Add a marker in Sydney and UBO
         LatLng sydney = new LatLng(-34, 151);
-        LatLng ubo = new LatLng(48.39, -4.47);
+        LatLng ubo = new LatLng(48.395, -4.475);
 
         myMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
         myMap.addMarker(new MarkerOptions().position(ubo).title("Marker in UBO"));
