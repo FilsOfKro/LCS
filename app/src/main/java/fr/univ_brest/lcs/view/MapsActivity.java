@@ -25,6 +25,7 @@ import fr.univ_brest.lcs.model.Webcam;
 import fr.univ_brest.lcs.R;
 
 import android.util.Log;
+import android.widget.Toast;
 
 /**
  * MapsActivity displays a map with user's position and the nearby cameras.
@@ -64,7 +65,6 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
                     .build();
         }
     }
-
 
     /**
      * Manipulates the map once available.
@@ -128,6 +128,18 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
         myMap.setMyLocationEnabled(true);
         myMap.moveCamera(CameraUpdateFactory.newLatLng(me));
         myMap.moveCamera(CameraUpdateFactory.zoomTo(14f));
+
+        GoogleMap.OnInfoWindowClickListener MyOnInfoWindowClickListener
+                = new GoogleMap.OnInfoWindowClickListener(){
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                Toast.makeText(MapsActivity.this,
+                        "onInfoWindowClick():\n" +
+                                marker.getPosition().latitude + "\n" +
+                                marker.getPosition().longitude,
+                        Toast.LENGTH_LONG).show();
+            }
+        };
     }
 
 // --Commented out by Inspection START (21/12/2016 15:28):
