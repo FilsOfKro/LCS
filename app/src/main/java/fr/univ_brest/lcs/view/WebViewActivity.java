@@ -35,19 +35,19 @@ public class WebViewActivity extends AppCompatActivity {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.webview);
+        setContentView(R.layout.activity_web_view);
 
         Button retourCarte=(Button)findViewById(R.id.buttonUrl);
         webView = (WebView) findViewById(R.id.webView1);
         //enable the use of javascript to manipulate the web page
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setDomStorageEnabled(true);
-        webView.loadUrl("http://iotubo.univ-brest.fr/");
-        webView.setWebViewClient(new WebViewClient() {
+        webView.loadUrl("http://www.dickpritchettrealestate.com/eagle-feed.html");
+        /*webView.setWebViewClient(new WebViewClient() {
             @Override
-            /**
+            *//**
              * function that insert the password and login of the camera into the web page
-             */
+             *//*
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
                 final String js = "javascript:" +
@@ -56,13 +56,12 @@ public class WebViewActivity extends AppCompatActivity {
                         "document.getElementById('login_botton').click()";
 
             }
-        });
+        });*/
         //button to return to the main activity
         retourCarte.setOnClickListener(new OnClickListener() {
             @Override
-            void onClick(View v) {
-                Intent intent = new Intent(this, MapsActivity.class);
-                this.finish();
+            public void onClick(View v) {
+                Intent intent = new Intent(WebViewActivity.this, MapsActivity.class);
                 startActivity(intent);
             }
         });
