@@ -9,20 +9,23 @@ import java.net.InetAddress;
  */
 
 public class Webcam {
-    private InetAddress ip;
+    private String hostname;
     private LatLng coordinates;
+    private String name;
 
-    public Webcam(InetAddress ip, LatLng coordinates) {
-        this.ip = ip;
+    //Constructor with a hostname
+    public Webcam(String hostname, LatLng coordinates, String name) {
+        this.hostname = hostname;
         this.coordinates = coordinates;
+        this.name = name;
     }
 
-    public InetAddress getIp() {
-        return ip;
+    public String getHostname() {
+        return hostname;
     }
 
-    public void setIp(InetAddress ip) {
-        this.ip = ip;
+    public void setHostname(String hostname) {
+        this.hostname = hostname;
     }
 
     public LatLng getCoordinates() {
@@ -31,5 +34,13 @@ public class Webcam {
 
     public void setCoordinates(LatLng coordinates) {
         this.coordinates = coordinates;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

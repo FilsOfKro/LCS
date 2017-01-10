@@ -21,7 +21,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.common.api.GoogleApiClient;
 
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
-
+import fr.univ_brest.lcs.model.Webcam;
 import fr.univ_brest.lcs.R;
 
 import android.util.Log;
@@ -111,15 +111,15 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
         }
 
         // Add a marker in SUMPPS and UBO
-        LatLng sumpps = new LatLng(48.4, -4.49);
-        LatLng ubo = new LatLng(48.399, -4.48);
+        Webcam ubo = new Webcam("iotubo.univ-brest.fr", new LatLng(48.399, -4.495), "UBO");
+        Webcam sumpps = new Webcam("une.adresse.fr" , new LatLng(48.4, -4.499), "SUMPPS");
 
         //Les marqueurs sont pour l'instant écris en dur dans l'application, dans une version future
         // il faudra constituer une liste et la parcourir a l'aide d'un foreach par exemple et
         // appliquer le traitement suivant
 
-        myMap.addMarker(new MarkerOptions().position(sydney).title("Ouvrir le flux pour " + summps.getDescription()));
-        myMap.addMarker(new MarkerOptions().position(ubo).title("Marker in UBO"));
+        myMap.addMarker(new MarkerOptions().position(ubo.getCoordinates()).title("Ouvrir le flux pour " + ubo.getName()));
+        myMap.addMarker(new MarkerOptions().position(sumpps.getCoordinates()).title("Ouvrir le flux pour " + sumpps.getName()));
 
         //Find user's location
         LatLng me = new LatLng(myLatitude, myLongitude);
