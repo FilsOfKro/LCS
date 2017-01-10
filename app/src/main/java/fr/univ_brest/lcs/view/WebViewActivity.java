@@ -42,12 +42,12 @@ public class WebViewActivity extends AppCompatActivity {
         //enable the use of javascript to manipulate the web page
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setDomStorageEnabled(true);
-        webView.loadUrl("http://www.dickpritchettrealestate.com/eagle-feed.html");
-        /*webView.setWebViewClient(new WebViewClient() {
+        webView.loadUrl("http://iotubo.univ-brest.fr");
+        webView.setWebViewClient(new WebViewClient() {
             @Override
-            *//**
+            /**
              * function that insert the password and login of the camera into the web page
-             *//*
+             */
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
                 final String js = "javascript:" +
@@ -56,7 +56,7 @@ public class WebViewActivity extends AppCompatActivity {
                         "document.getElementById('login_botton').click()";
 
             }
-        });*/
+        });
         //button to return to the main activity
         retourCarte.setOnClickListener(new OnClickListener() {
             @Override
