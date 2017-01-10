@@ -110,11 +110,15 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
             myLongitude = myLastLocation.getLongitude();
         }
 
-        // Add a marker in Sydney and UBO
-        LatLng sydney = new LatLng(-34, 151);
-        LatLng ubo = new LatLng(48.39, -4.47);
+        // Add a marker in SUMPPS and UBO
+        LatLng sumpps = new LatLng(48.4, -4.49);
+        LatLng ubo = new LatLng(48.399, -4.48);
 
-        myMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+        //Les marqueurs sont pour l'instant écris en dur dans l'application, dans une version future
+        // il faudra constituer une liste et la parcourir a l'aide d'un foreach par exemple et
+        // appliquer le traitement suivant
+
+        myMap.addMarker(new MarkerOptions().position(sydney).title("Ouvrir le flux pour " + summps.getDescription()));
         myMap.addMarker(new MarkerOptions().position(ubo).title("Marker in UBO"));
 
         //Find user's location
