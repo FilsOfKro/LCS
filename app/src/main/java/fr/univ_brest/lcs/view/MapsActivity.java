@@ -180,9 +180,7 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
             @Override
             public void onInfoWindowClick(Marker marker) {
                 Toast.makeText(MapsActivity.this,
-                        "onInfoWindowClick():\n" +
-                                marker.getPosition().latitude + "\n" +
-                                marker.getPosition().longitude,
+                        "Veuillez patienter pendant le chargement",
                         Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(MapsActivity.this, WebViewActivity.class);
                         startActivity(intent);
