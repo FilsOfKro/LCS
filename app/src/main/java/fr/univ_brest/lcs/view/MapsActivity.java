@@ -1,6 +1,44 @@
+/*
+ * Copyright (c) 2017.
+ *
+ * Owenn Pantry / Lucas Roulin
+ *
+ * owenn.pantry@gmail.com
+ *
+ * Ce logiciel est un programme informatique développé comme un projet d'étude.
+ *
+ *  Ce logiciel est régi par la licence CeCILL soumise au droit français et
+ *  respectant les principes de diffusion des logiciels libres. Vous pouvez
+ *  utiliser, modifier et/ou redistribuer ce programme sous les conditions
+ *  de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA
+ *  sur le site "http://www.cecill.info".
+ *
+ *  En contrepartie de l'accessibilité au code source et des droits de copie,
+ *  de modification et de redistribution accordés par cette licence, il n'est
+ *  offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
+ *  seule une responsabilité restreinte pèse sur l'auteur du programme,  le
+ *  titulaire des droits patrimoniaux et les concédants successifs.
+ *
+ *  A cet égard  l'attention de l'utilisateur est attirée sur les risques
+ *  associés au chargement,  à l'utilisation,  à la modification et/ou au
+ *  développement et à la reproduction du logiciel par l'utilisateur étant
+ *  donné sa spécificité de logiciel libre, qui peut le rendre complexe à
+ *  manipuler et qui le réserve donc à des développeurs et des professionnels
+ *  avertis possédant  des  connaissances  informatiques approfondies.  Les
+ *  utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
+ *  logiciel à leurs besoins dans des conditions permettant d'assurer la
+ *  sécurité de leurs systèmes et ou de leurs données et, plus généralement,
+ *  à l'utiliser et l'exploiter dans les mêmes conditions de sécurité.
+ *
+ *  Le fait que vous puissiez accéder à cet en-tête signifie que vous avez
+ *  pris connaissance de la licence CeCILL, et que vous en avez accepté les
+ *  termes.
+ */
+
 package fr.univ_brest.lcs.view;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.support.annotation.NonNull;
@@ -93,8 +131,12 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
     //Requested by ConnectionCallbacks
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        //Permission check required bymyLastLocation
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        //Permission check required by myLastLocation
+
+        if (ActivityCompat.checkSelfPermission(
+                this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
@@ -102,8 +144,12 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
             //                                          int[] grantResults)
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},
+                    0); //Does not catch
             return;
         }
+
         Location myLastLocation = LocationServices.FusedLocationApi.getLastLocation(myGoogleApiClient);
         if(myLastLocation != null){
             myLatitude = myLastLocation.getLatitude();
@@ -111,10 +157,10 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
         }
 
         // Add a marker in SUMPPS and UBO
-        Webcam ubo = new Webcam("iotubo.univ-brest.fr", new LatLng(48.399, -4.495), "UBO");
-        Webcam sumpps = new Webcam("une.adresse.fr" , new LatLng(48.4, -4.499), "SUMPPS");
+        Webcam ubo = new Webcam("iotubo.univ-brest.fr", new LatLng(48.400695, -4.501135), "UBO");
+        Webcam sumpps = new Webcam("une.adresse.fr" , new LatLng(48.399519, -4.495070), "SUMPPS");
 
-        //Les marqueurs sont pour l'instant écris en dur dans l'application, dans une version future
+        //Les marqueurs sont pour l'instant écrits en dur dans l'application, dans une version future
         // il faudra constituer une liste et la parcourir a l'aide d'un foreach par exemple et
         // appliquer le traitement suivant
 
@@ -138,10 +184,32 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
                                 marker.getPosition().latitude + "\n" +
                                 marker.getPosition().longitude,
                         Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(MapsActivity.this, WebViewActivity.class);
+                        startActivity(intent);
             }
         };
+
+        myMap.setOnInfoWindowClickListener(MyOnInfoWindowClickListener);
     }
 
+    //Never called by ActivityCompat.requestPermissions
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        Log.d("TAG", "dialog onRequestPermissionsResult");
+        switch (requestCode) {
+            case 0:
+                // Check Permissions Granted or not
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    onMapReady(myMap);
+                } else {
+                    // Permission Denied
+                    Toast.makeText(this, "Read contact permission is denied", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
 // --Commented out by Inspection START (21/12/2016 15:28):
 //    public void onConnectionFailed(ConnectionResult result) {
 //        // Refer to the javadoc for ConnectionResult to see what error codes might be returned in
